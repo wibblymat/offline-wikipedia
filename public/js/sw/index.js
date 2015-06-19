@@ -12,11 +12,63 @@ self.addEventListener('install', event => {
     caches.open(staticCacheName).then(cache => {
       return cache.addAll([
         '/',
-        '/shell.html',
+        new Request('/shell.html', {credentials: 'include'}),
         '/js/page.js',
         '/js/page-framework.js', // yeahhhh, we're caching waayyyyy more than we need, but keeps the request tests fair
         '/css/head-wiki.css', // don't need this when it's inlined, but helps when rendered with blocking CSS in settings
-        '/css/wiki.css'
+        '/css/wiki.css',
+        '/css/flags.css',
+        '/components/polymer/polymer.html',
+        '/components/polymer/polymer-mini.html',
+        '/components/polymer/polymer-micro.html',
+        '/vulcanized.html',
+        '/components/webcomponentsjs/webcomponents-lite.min.js',
+        // Non-vulcanized versions too
+        '/components.html',
+
+        '/components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html',
+        '/components/iron-autogrow-textarea/iron-autogrow-textarea.html',
+        '/components/iron-behaviors/iron-button-state.html',
+        '/components/iron-behaviors/iron-control-state.html',
+        '/components/iron-flex-layout/iron-flex-layout.html',
+        '/components/iron-flex-layout/classes/iron-flex-layout.html',
+        '/components/iron-flex-layout/classes/iron-shadow-flex-layout.html',
+        '/components/iron-form-element-behavior/iron-form-element-behavior.html',
+        '/components/iron-icon/iron-icon.html',
+        '/components/iron-iconset-svg/iron-iconset-svg.html',
+        '/components/iron-input/iron-input.html',
+        '/components/iron-meta/iron-meta.html',
+        '/components/iron-validatable-behavior/iron-validatable-behavior.html',
+        '/components/paper-behaviors/paper-button-behavior.html',
+        '/components/paper-behaviors/paper-inky-focus-behavior.html',
+        '/components/paper-icon-button/paper-icon-button.html',
+        '/components/paper-input/all-imports.html',
+        '/components/paper-input/paper-input-addon-behavior.html',
+        '/components/paper-input/paper-input-behavior.html',
+        '/components/paper-input/paper-input-char-counter.html',
+        '/components/paper-input/paper-input-container.html',
+        '/components/paper-input/paper-input-error.html',
+        '/components/paper-input/paper-input.html',
+        '/components/paper-input/paper-textarea.html',
+        '/components/paper-ripple/paper-ripple.html',
+        '/components/paper-styles/color.html',
+        '/components/paper-styles/default-theme.html',
+        '/components/paper-styles/demo-pages.html',
+        '/components/paper-styles/paper-styles-classes.html',
+        '/components/paper-styles/paper-styles.html',
+        '/components/paper-styles/shadow.html',
+        '/components/paper-styles/typography.html',
+        '/components/paper-toggle-button/paper-toggle-button.html',
+        '/components/paper-toggle-button/paper-toggle-button.css',
+        '/components/platinum-sw/platinum-sw-cache.html',
+        '/components/platinum-sw/platinum-sw-elements.html',
+        '/components/platinum-sw/platinum-sw-fetch.html',
+        '/components/platinum-sw/platinum-sw-import-script.html',
+        '/components/platinum-sw/platinum-sw-register.html',
+        '/components/wiki-icons/wiki-icons.html',
+
+
+        '/components/platinum-sw/platinum-sw-register.html',
       ]);
     })
   );
@@ -55,7 +107,7 @@ self.addEventListener('fetch', event => {
       event.respondWith(caches.match('/'));
       return;
     }
-    if (requestURL.pathname == '/') {
+    if (requestURL.pathname == '/shell.html') {
       event.respondWith(caches.match('/shell.html'));
       return;
     }
@@ -68,7 +120,7 @@ self.addEventListener('fetch', event => {
         }
         return;
       }
-      
+
       // Get ahead of the pack by starting the json request now
       var jsonURL = new URL(requestURL);
       jsonURL.pathname += '.json';

@@ -17,7 +17,9 @@ class Article extends (require('events').EventEmitter) {
     this.serverRendered = !!document.querySelector('.content.server-rendered');
 
     this._header.addEventListener('change', event => {
-      if (event.target.name == 'cache') this.emit('cacheChange', {value: event.target.checked});
+      if (event.target.getAttribute('name') == 'cache') {
+        this.emit('cacheChange', {value: event.target.checked});
+      }
     });
 
     this._backgroundLoadOffer.addEventListener('click', event => {

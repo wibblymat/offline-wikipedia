@@ -15,13 +15,48 @@
       <form action="./" class="flags-form">
         <label>
           <div class="input-container">
+            <input type="checkbox" name="conditional-polyfills" value="1"{?flags.conditional-polyfills} checked{/flags.conditional-polyfills}>
+          </div>
+          <div class="desc">
+            <div class="main">Conditonal polyfills.</div>
+            <div class="sub">
+              Only include the Web Components polyfills in browers that actually need them.
+            </div>
+          </div>
+        </label>
+        <label>
+          <div class="input-container">
+            <input type="checkbox" name="vulcanize" value="1"{?flags.vulcanize} checked{/flags.vulcanize}>
+          </div>
+          <div class="desc">
+            <div class="main">Vulcanize.</div>
+            <div class="sub">
+              Use the vulcanize process to reduce the size of the Polymer
+              elements downloaded.
+            </div>
+          </div>
+        </label>
+        <label>
+          <div class="input-container">
+            <input type="checkbox" name="async-imports" value="1"{?flags.async-imports} checked{/flags.async-imports}>
+          </div>
+          <div class="desc">
+            <div class="main">Async imports.</div>
+            <div class="sub">
+              Load HTML imports asynchronously rather than blocking render until
+              all components have loaded.
+            </div>
+          </div>
+        </label>
+        <label>
+          <div class="input-container">
             <input type="checkbox" name="client-render" value="1"{?flags.client-render} checked{/flags.client-render}>
           </div>
           <div class="desc">
             <div class="main">Prevent server-side rendering of articles.</div>
             <div class="sub">
-              Article fetching &amp; rendering will be handled by JS. Note that 
-              the client will always render articles when the ServiceWorker is 
+              Article fetching &amp; rendering will be handled by JS. Note that
+              the client will always render articles when the ServiceWorker is
               present.
             </div>
           </div>
@@ -52,8 +87,8 @@
             <div class="main">Disable chunking</div>
             <div class="sub">
               All pages are served with chunking, this is particularly useful on
-              article pages as it allows the top-of-page content to be rendered 
-              while the request to wikipedia is still in progress. 
+              article pages as it allows the top-of-page content to be rendered
+              while the request to wikipedia is still in progress.
               This only impacts server-side rendering.
             </div>
           </div>
@@ -66,7 +101,7 @@
             <div class="main">Disable wikipedia piping</div>
             <div class="sub">
               By default, content is piped from wikipedia to the response. If
-              you tick this, content will be fully buffered on the server 
+              you tick this, content will be fully buffered on the server
               before sending. This only impacts server-side rendering.
             </div>
           </div>
@@ -78,7 +113,7 @@
           <div class="desc">
             <div class="main">Auto-cache article</div>
             <div class="sub">
-              Every article you visit will be cached for offline viewing. 
+              Every article you visit will be cached for offline viewing.
               Obviously this can land you with a massive cache.
             </div>
           </div>
@@ -102,8 +137,8 @@
           <div class="desc">
             <div class="main">Don't load extra CSS with XHR.</div>
             <div class="sub">
-              XHR is used to hack around Chrome/Safari's blocking behaviour. With 
-              this set, a standard link tag is used just before article content. 
+              XHR is used to hack around Chrome/Safari's blocking behaviour. With
+              this set, a standard link tag is used just before article content.
               You may need to remove your ServiceWorker to pick up this change.
             </div>
           </div>
@@ -127,9 +162,9 @@
           <div class="desc">
             <div class="main">Regular CSS loading.</div>
             <div class="sub">
-              Load all CSS using a link tag in the head. By deafult, a 
-              small amount of CSS loads inline, and the second loads depending 
-              on the above option. 
+              Load all CSS using a link tag in the head. By deafult, a
+              small amount of CSS loads inline, and the second loads depending
+              on the above option.
               You may need to remove your ServiceWorker to pick up this change.
             </div>
           </div>
@@ -141,8 +176,8 @@
           <div class="desc">
             <div class="main">Render-blocking JS</div>
             <div class="sub">
-              Get that framework feel by making the JS render-blocking. 
-              By default it loads deferred. 
+              Get that framework feel by making the JS render-blocking.
+              By default it loads deferred.
               You may need to remove your ServiceWorker to pick up this change.
             </div>
           </div>
@@ -154,7 +189,7 @@
           <div class="desc">
             <div class="main">Framework-sized JS</div>
             <div class="sub">
-              Get that framework feel even more by inflating the size of the JS. 
+              Get that framework feel even more by inflating the size of the JS.
               You may need to remove your ServiceWorker to pick up this change.
             </div>
           </div>
@@ -164,7 +199,7 @@
         </div>
       </form>
       <p>
-        Or use the following querystring to overwrite flags for a single 
+        Or use the following querystring to overwrite flags for a single
         request:
       </p>
       <div class="flags-query">?use-url-flags&amp;</div>

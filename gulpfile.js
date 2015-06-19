@@ -1,4 +1,5 @@
 var fs = require('fs');
+var path = require('path');
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
 var runSequence = require('run-sequence');
@@ -13,6 +14,28 @@ var babelify = require('babelify');
 var hbsfy = require("hbsfy");
 var spawn = require('child_process').spawn;
 var Promise = require('rsvp').Promise;
+var bower = require('gulp-bower');
+var vulcanize = require('gulp-vulcanize');
+var minifyScripts = require('gulp-minify-inline-scripts');
+var minifyHTML = require('gulp-minify-html');
+
+gulp.task('vulcanize', function () {
+  return gulp.src('dist/public/components.html')
+    .pipe(vulcanize({
+      abspath: './dist/public/',
+      excludes: ['components/polymer/polymer.html'],
+      stripExcludes: false,
+      inlineScripts: true,
+      inlineCss: true,
+      stripComments: true
+    }))
+    //.pipe(minifyScripts())
+    //.pipe(minifyHTML())
+    .pipe(plugins.rename('vulcanized.html'))
+    .pipe(gulp.dest('dist/public/'));
+});
+
+gulp.task('bower', bower);
 
 gulp.task('clean', function (done) {
   require('del')(['dist/*', '!dist/node_modules', '!dist/.git'], done);
@@ -208,7 +231,9 @@ gulp.task('server:templates', function () {
 });
 
 gulp.task('watch', function () {
-  gulp.watch(['public/*.html'], ['html']);
+  gulp.watch(['bower.json'], ['bower']);
+  gulp.watch(['public/**/*.html'], ['html']);
+  gulp.watch(['dist/public/components.html'], ['vulcanize']);
   gulp.watch(['public/**/*.scss'], ['css']);
   gulp.watch(['index.js', 'wikipedia/**'], ['server:js']);
   gulp.watch(['shared-templates/*.hbs'], ['server:sharedtemplates']);
@@ -223,7 +248,7 @@ gulp.task('watch', function () {
   });
 });
 
-var buildSequence = ['clean', ['css', 'misc', 'html', 'js', 'server:package', 'server:misc', 'server:js', 'server:sharedtemplates', 'server:templates']];
+var buildSequence = ['clean', ['bower', 'css', 'misc', 'html', 'js', 'server:package', 'server:misc', 'server:js', 'server:sharedtemplates', 'server:templates'], 'vulcanize'];
 var productionBuildSequence = buildSequence.concat(['rev', 'updaterefs', 'compress']);
 
 gulp.task('build', function() {
@@ -259,7 +284,7 @@ gulp.task('productionserve', function() {
 gulp.task('deploy', function() {
   return runSequence.apply(null, productionBuildSequence.concat([plugins.shell.task([
     'git init',
-    'heroku git:remote -a wiki-offline',
+    'heroku git:remote -a polymer-wiki-offline',
     'git add -A',
     'git commit --message "Build"',
     'git push heroku'

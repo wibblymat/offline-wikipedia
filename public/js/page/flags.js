@@ -15,12 +15,12 @@ class Flags extends (require('../../../isojs/flags')) {
 
   stringify() {
     var obj = {};
-    
+
     Object.keys(this._vals).forEach(key => {
       if (key == 'use-url-flags') return;
       if (this._vals[key]) obj[key] = 1;
     });
-    
+
     return querystring.stringify(obj);
   }
 
@@ -29,8 +29,8 @@ class Flags extends (require('../../../isojs/flags')) {
   }
 
   getWebPageTestScript() {
-    return `setCookie	https://wiki-offline.jakearchibald.com/	flags=${this.stringify()}
-navigate	https://wiki-offline.jakearchibald.com/wiki/Hulk_Hogan`;
+    return `setCookie	https://polymer-wiki-offline.herokuapp.com/	flags=${this.stringify()}
+navigate	https://polymer-wiki-offline.herokuapp.com/wiki/Hulk_Hogan`;
   }
 
   setCookie() {

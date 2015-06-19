@@ -37,6 +37,9 @@ app.set('port', (process.env.PORT || 8000));
 app.use('/js', gzipStatic('public/js', staticOptions));
 app.use('/css', gzipStatic('public/css', staticOptions));
 app.use('/imgs', gzipStatic('public/imgs', staticOptions));
+app.use('/components', gzipStatic('public/components', staticOptions));
+app.use('/components.html', gzipStatic('public/components.html', staticOptions));
+app.use('/vulcanized.html', gzipStatic('public/vulcanized.html', staticOptions));
 app.use('/sw.js', gzipStatic('public/sw.js', {
   maxAge: 0
 }));

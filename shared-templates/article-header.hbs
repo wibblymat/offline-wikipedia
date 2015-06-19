@@ -10,10 +10,6 @@
 {{/if}}
 
 <label class="cache-toggle"{{#unless cacheCapable}} style="visibility: hidden"{{/unless}}>
-  <input type="checkbox" name="cache"{{#if cached}} checked{{/if}}>
-  <span class="material-switch">
-    <span class="track"></span>
-    <span class="handle"></span>
-  </span>
+  <paper-toggle-button name="cache"{{#if cached}} checked{{/if}}></paper-toggle-button>
   <span class="read-offline-txt">Read offline</span>
 </label>

@@ -1,0 +1,12 @@
+{
+  "name": "offline-polymer-wikipedia",
+  "private": true,
+  "dependencies": {
+    "paper-input": "PolymerElements/paper-input#~1.0.0",
+    "paper-icon-button": "PolymerElements/paper-icon-button#~1.0.0",
+    "paper-toggle-button": "PolymerElements/paper-toggle-button#~1.0.0",
+    "iron-icon": "PolymerElements/iron-icon#~1.0.0",
+    "iron-iconset-svg": "PolymerElements/iron-iconset-svg#~1.0.0",
+    "platinum-sw": "PolymerElements/platinum-sw#~1.0.0"
+  }
+}

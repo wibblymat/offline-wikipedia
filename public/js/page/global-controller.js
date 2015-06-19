@@ -26,7 +26,7 @@ class GlobalController {
 
     // setup
     var debouncedSearch = debounce(e => this._onSearchInput(e), 150);
-    
+
     // router
     if (location.pathname == '/') {
       new (require('./home-controller'));
@@ -53,10 +53,14 @@ class GlobalController {
       return;
     }
 
-    var reg = await navigator.serviceWorker.register('/sw.js')
-    reg.addEventListener('updatefound', _ => this._onSwUpdateFound(reg));
     navigator.serviceWorker.addEventListener('controllerchange', _ => this._onSwControllerChange());
-    if (reg.waiting) this._onSwUpdateReady();
+
+    var ptSw = document.createElement('platinum-sw-register');
+    ptSw.setAttribute('href', '/sw.js');
+    ptSw.setAttribute('auto-register', true);
+    ptSw.addEventListener('service-worker-updated', _ => this._onSwUpdateReady());
+    ptSw.addEventListener('service-worker-installed', _ => this._onSwUpdateFound());
+    document.body.appendChild(ptSw);
   }
 
   _onSwControllerChange() {
@@ -76,23 +80,33 @@ class GlobalController {
     }
   }
 
-  _onSwUpdateFound(registration) {
-    var newWorker = registration.installing;
-
-    registration.installing.addEventListener('statechange', async _ => {
-      // the very first activation!
-      // tell the user stuff works offline
-      if (newWorker.state == 'activated' && !navigator.serviceWorker.controller) {
-        this._toastsView.show("Ready to work offline", {
-          duration: 5000
-        });
-        return;
-      }
-
-      if (newWorker.state == 'installed' && navigator.serviceWorker.controller) {
-        this._onSwUpdateReady();
-      }
+  _offlineReady() {
+    this._toastsView.show("Ready to work offline", {
+      duration: 5000
     });
+  }
+
+  async _onSwUpdateFound() {
+    var registration = await navigator.serviceWorker.getRegistration();
+    var newWorker = registration.installing || registration.waiting || registration.active;
+
+    if (newWorker.state == 'activated' && !navigator.serviceWorker.controller) {
+      this._offlineReady();
+    }
+
+    if (newWorker.state == 'installed') {
+      if (navigator.serviceWorker.controller) {
+        return this._onSwUpdateReady();
+      }
+
+      newWorker.addEventListener('statechange', _ => {
+        // the very first activation!
+        // tell the user stuff works offline
+        if (newWorker.state == 'activated') {
+          this._offlineReady();
+        }
+      });
+    }
   }
 
   async _onSearchInput({value}) {
@@ -104,7 +118,7 @@ class GlobalController {
     }
 
     var results;
-    
+
     try {
       results = {results: await wikipedia.search(value)};
     }
